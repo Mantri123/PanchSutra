@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, Loader2, GraduationCap, Award, MapPin } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, Loader2, GraduationCap, Award } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Signup: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const defaultRole = searchParams.get('role') as 'patient' | 'doctor' | 'admin' || 'patient';
+  const defaultRole = searchParams.get('role') as 'doctor' | 'admin' || 'doctor';
   
   const [formData, setFormData] = useState({
     name: '',
@@ -14,10 +14,6 @@ const Signup: React.FC = () => {
     password: '',
     confirmPassword: '',
     role: defaultRole,
-    // Patient specific
-    dateOfBirth: '',
-    address: '',
-    emergencyContact: '',
     // Doctor specific
     qualification: '',
     licenseNumber: '',
@@ -33,7 +29,6 @@ const Signup: React.FC = () => {
   const [error, setError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const { signup, isLoading } = useAuth();
-  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
@@ -59,12 +54,7 @@ const Signup: React.FC = () => {
   };
 
   const validateStep2 = () => {
-    if (formData.role === 'patient') {
-      if (!formData.dateOfBirth || !formData.address || !formData.emergencyContact) {
-        setError('Please fill in all patient details');
-        return false;
-      }
-    } else if (formData.role === 'doctor') {
+    if (formData.role === 'doctor') {
       if (!formData.qualification || !formData.experience || !formData.specialization || !formData.registrationNumber || !formData.licenseNumber) {
         setError('Please fill in all doctor details');
         return false;
@@ -229,9 +219,8 @@ const Signup: React.FC = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-blue-300"
                 >
-                  <option value="patient">Patient</option>
                   <option value="doctor">Doctor</option>
-                  <option value="admin">Admin</option>
+                  <option value="admin">Receptionist</option>
                 </select>
               </div>
 
@@ -310,67 +299,6 @@ const Signup: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {formData.role === 'patient' && (
-                <>
-                  <div>
-                    <label htmlFor="dateOfBirth" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Date of Birth
-                    </label>
-                    <input
-                      id="dateOfBirth"
-                      name="dateOfBirth"
-                      type="date"
-                      required
-                      value={formData.dateOfBirth}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-blue-300"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Address
-                    </label>
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
-                      </div>
-                      <input
-                        id="address"
-                        name="address"
-                        type="text"
-                        required
-                        value={formData.address}
-                        onChange={handleChange}
-                        className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-blue-300"
-                        placeholder="Enter your address"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="emergencyContact" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Emergency Contact
-                    </label>
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
-                      </div>
-                      <input
-                        id="emergencyContact"
-                        name="emergencyContact"
-                        type="tel"
-                        required
-                        value={formData.emergencyContact}
-                        onChange={handleChange}
-                        className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-blue-300"
-                        placeholder="Emergency contact number"
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-
               {formData.role === 'doctor' && (
                 <>
                   <div>

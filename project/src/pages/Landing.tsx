@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Star, Users, Calendar, Shield, Heart, Leaf, Award, Clock } from 'lucide-react';
+import { ArrowRight, Star, Users, Calendar, Shield, Heart, Leaf, Award, Clock } from 'lucide-react';
 
 const Landing: React.FC = () => {
   const features = [
@@ -107,10 +107,10 @@ const Landing: React.FC = () => {
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-in slide-in-from-left-5 duration-1000 delay-400">
                 <Link
-                  to="/signup"
+                  to="/signup?role=doctor"
                   className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
-                  Start Your Journey
+                  Join as Doctor
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
                 <Link
@@ -224,10 +224,10 @@ const Landing: React.FC = () => {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{therapy.name}</h3>
                   <p className="text-gray-600 mb-4">{therapy.description}</p>
                   <Link
-                    to="/signup"
+                    to="/signup?role=doctor"
                     className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors group"
                   >
-                    Book Now
+                    Join as Doctor
                     <ArrowRight className="ml-1 h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-200" />
                   </Link>
                 </div>
@@ -290,19 +290,19 @@ const Landing: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/signup"
+              to="/signup?role=doctor"
               className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-blue-600 bg-white rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
-              Get Started Now
+              Join as Doctor
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
-            <Link
-              to="/signup?role=doctor"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-700 rounded-xl hover:bg-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-            >
-              Join as Doctor
-              <Users className="ml-2 h-5 w-5" />
-            </Link>
+                <Link
+                  to="/signup?role=admin"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-700 rounded-xl hover:bg-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                >
+                  Join as Receptionist
+                  <Users className="ml-2 h-5 w-5" />
+                </Link>
           </div>
         </div>
       </section>

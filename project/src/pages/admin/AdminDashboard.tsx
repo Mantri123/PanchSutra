@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Calendar, TrendingUp, DollarSign, Activity, Bell, Settings, BarChart3, UserCheck, Clock, CheckCircle } from 'lucide-react';
+import { Users, Calendar, DollarSign, Activity, Bell, Settings, BarChart3, UserCheck, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useApp } from '../../contexts/AppContext';
-import { format, isToday } from 'date-fns';
+import { isToday } from 'date-fns';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -85,7 +85,7 @@ const AdminDashboard: React.FC = () => {
         {/* Header */}
         <div className="mb-8 animate-in slide-in-from-top-5 duration-700">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Admin Dashboard 🏥
+            Receptionist Dashboard 🏥
           </h1>
           <p className="text-gray-600 text-lg">
             Monitor and manage your PanchSutra platform operations.

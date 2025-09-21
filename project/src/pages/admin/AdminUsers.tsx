@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Search, Filter, User, Plus, Edit, Trash2, CheckCircle, XCircle, Mail, Phone } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
 
 const AdminUsers: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -63,7 +62,7 @@ const AdminUsers: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">User Management</h1>
-              <p className="text-gray-600">Manage patients, doctors, and admin users</p>
+              <p className="text-gray-600">Manage patients, doctors, and receptionist users</p>
             </div>
             <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               <Plus className="h-5 w-5 inline mr-2" />
@@ -94,7 +93,7 @@ const AdminUsers: React.FC = () => {
               <option value="all">All Roles</option>
               <option value="patient">Patients</option>
               <option value="doctor">Doctors</option>
-              <option value="admin">Admins</option>
+              <option value="admin">Receptionists</option>
             </select>
 
             <select
@@ -130,7 +129,7 @@ const AdminUsers: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filteredUsers.map((user, index) => (
+                {filteredUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-blue-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
@@ -171,7 +170,6 @@ const AdminUsers: React.FC = () => {
                             </span>
                           ) : (
                             <span className="text-xs text-yellow-600 flex items-center">
-                              <Clock className="h-3 w-3 mr-1" />
                               Pending
                             </span>
                           )}

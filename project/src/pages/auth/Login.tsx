@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [accountType, setAccountType] = useState<'patient' | 'doctor' | 'admin'>('patient');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
-  const navigate = useNavigate();
+  // navigation handled at higher level after login
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!email || !password) {
+    if (!emailOrPhone || !password) {
       setError('Please fill in all fields');
       return;
     }
 
-    const success = await login(email, password);
+    const success = await login(emailOrPhone, password, accountType);
     if (success) {
       // Navigation will be handled by App.tsx based on user role
     } else {
@@ -29,9 +30,9 @@ const Login: React.FC = () => {
   };
 
   const demoCredentials = [
-    { role: 'Patient', email: 'patient@demo.com', password: 'demo123', color: 'bg-green-50 border-green-200 hover:bg-green-100' },
-    { role: 'Doctor', email: 'doctor@demo.com', password: 'demo123', color: 'bg-blue-50 border-blue-200 hover:bg-blue-100' },
-    { role: 'Admin', email: 'admin@demo.com', password: 'demo123', color: 'bg-purple-50 border-purple-200 hover:bg-purple-100' }
+  { role: 'Patient', email: 'patient@demo.com', phone: '+91-9876543210', password: 'demo123', color: 'bg-green-50 border-green-200 hover:bg-green-100' },
+  { role: 'Doctor', email: 'doctor@demo.com', phone: '+91-9876543220', password: 'demo123', color: 'bg-blue-50 border-blue-200 hover:bg-blue-100' },
+  { role: 'Receptionist', email: 'admin@demo.com', phone: '+91-9876543230', password: 'demo123', color: 'bg-purple-50 border-purple-200 hover:bg-purple-100' }
   ];
 
   return (
@@ -57,22 +58,39 @@ const Login: React.FC = () => {
 
             <div className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email Address
+                <label htmlFor="accountType" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Account Type
+                </label>
+                <select
+                  id="accountType"
+                  name="accountType"
+                  value={accountType}
+                  onChange={(e) => setAccountType(e.target.value as 'patient' | 'doctor' | 'admin')}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-blue-300"
+                >
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="admin">Receptionist</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="emailOrPhone" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Email Address or Phone Number
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
                   </div>
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
+                    id="emailOrPhone"
+                    name="emailOrPhone"
+                    type="text"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={emailOrPhone}
+                    onChange={(e) => setEmailOrPhone(e.target.value)}
                     className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-blue-300"
-                    placeholder="Enter your email"
+                    placeholder="Enter your email or phone number"
                   />
                 </div>
               </div>
@@ -154,19 +172,33 @@ const Login: React.FC = () => {
             <p className="text-center text-sm font-semibold text-gray-700 mb-4">Demo Credentials</p>
             <div className="space-y-3">
               {demoCredentials.map((cred, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setEmail(cred.email);
-                    setPassword(cred.password);
-                  }}
-                  className={`w-full text-left px-4 py-3 text-sm border rounded-xl transition-all duration-300 transform hover:scale-105 ${cred.color}`}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">{cred.role}</span>
-                    <span className="text-xs opacity-75">{cred.email}</span>
+                <div key={index} className="space-y-2">
+                  <div className="text-center text-xs font-medium text-gray-600">{cred.role}</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => {
+                        setEmailOrPhone(cred.email);
+                        setPassword(cred.password);
+                        setAccountType(cred.role.toLowerCase() as 'patient' | 'doctor' | 'admin');
+                      }}
+                      className={`text-left px-3 py-2 text-xs border rounded-lg transition-all duration-300 transform hover:scale-105 ${cred.color}`}
+                    >
+                      <div className="font-semibold">Email</div>
+                      <div className="opacity-75">{cred.email}</div>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEmailOrPhone(cred.phone);
+                        setPassword(cred.password);
+                        setAccountType(cred.role.toLowerCase() as 'patient' | 'doctor' | 'admin');
+                      }}
+                      className={`text-left px-3 py-2 text-xs border rounded-lg transition-all duration-300 transform hover:scale-105 ${cred.color}`}
+                    >
+                      <div className="font-semibold">Phone</div>
+                      <div className="opacity-75">{cred.phone}</div>
+                    </button>
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           </div>

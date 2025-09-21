@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, User, LogOut, Menu, X } from 'lucide-react';
+import { Bell, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useApp } from '../../contexts/AppContext';
 
@@ -32,11 +32,12 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to={user ? getDashboardPath() : '/'} className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
+          <Link to={user ? getDashboardPath() : '/'} className="flex items-center space-x-4 group">
+            {/* Simple blue box logo (no image) */}
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-blue-600 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
               <span className="text-white font-bold text-lg">PS</span>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="hidden sm:inline text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               PanchSutra
             </span>
           </Link>
@@ -54,13 +55,6 @@ const Header: React.FC = () => {
               
               {user.role === 'patient' && (
                 <>
-                  <Link
-                    to="/patient/therapies"
-                    className="text-gray-700 hover:text-blue-600 transition-colors font-medium relative group"
-                  >
-                    Therapies
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                  </Link>
                   <Link
                     to="/patient/my-sessions"
                     className="text-gray-700 hover:text-blue-600 transition-colors font-medium relative group"
@@ -153,30 +147,30 @@ const Header: React.FC = () => {
                         {user.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <div className="hidden sm:block text-left">
-                      <p className="text-sm font-semibold text-gray-900">{user.name}</p>
-                      <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+                    <div className="hidden sm:flex flex-col text-left">
+                      <span className="text-sm font-medium text-gray-900">{user.name}</span>
+                      <span className="text-xs text-gray-500">{user.role === 'admin' ? 'Receptionist' : user.role === 'doctor' ? 'Doctor' : 'Patient'}</span>
                     </div>
                   </button>
 
                   {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50 animate-in slide-in-from-top-2 duration-200">
-                      <Link
-                        to="/profile"
-                        className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        <User className="h-4 w-4 mr-3" />
-                        Profile Settings
-                      </Link>
-                      <hr className="my-2 border-gray-100" />
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                      >
-                        <LogOut className="h-4 w-4 mr-3" />
-                        Sign Out
-                      </button>
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                      <div className="px-3 py-2">
+                        <Link
+                          to="/profile"
+                          className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Profile
+                        </Link>
+                        <button
+                          onClick={() => { setShowUserMenu(false); handleLogout(); }}
+                          className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg"
+                        >
+                          <LogOut className="h-4 w-4 mr-2" />
+                          Sign Out
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -220,16 +214,9 @@ const Header: React.FC = () => {
                 >
                   Dashboard
                 </Link>
-                
+
                 {user.role === 'patient' && (
                   <>
-                    <Link
-                      to="/patient/therapies"
-                      className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      onClick={() => setShowMobileMenu(false)}
-                    >
-                      Therapies
-                    </Link>
                     <Link
                       to="/patient/my-sessions"
                       className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -239,7 +226,7 @@ const Header: React.FC = () => {
                     </Link>
                   </>
                 )}
-                
+
                 {user.role === 'doctor' && (
                   <>
                     <Link
@@ -255,6 +242,39 @@ const Header: React.FC = () => {
                       onClick={() => setShowMobileMenu(false)}
                     >
                       Schedule
+                    </Link>
+                    <Link
+                      to="/doctor/sessions"
+                      className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      Sessions
+                    </Link>
+                  </>
+                )}
+
+                {user.role === 'admin' && (
+                  <>
+                    <Link
+                      to="/admin/users"
+                      className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      Users
+                    </Link>
+                    <Link
+                      to="/admin/centers"
+                      className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      Centers
+                    </Link>
+                    <Link
+                      to="/admin/reports"
+                      className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      Reports
                     </Link>
                   </>
                 )}

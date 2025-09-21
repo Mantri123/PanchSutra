@@ -3,7 +3,7 @@ import { User, Patient, Doctor, Admin } from '../types';
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (emailOrPhone: string, password: string, role?: 'patient' | 'doctor' | 'admin') => Promise<boolean>;
   signup: (userData: Partial<User> & { password: string; confirmPassword?: string }) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
@@ -82,13 +82,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (emailOrPhone: string, password: string, role?: 'patient' | 'doctor' | 'admin'): Promise<boolean> => {
     setIsLoading(true);
     
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    const foundUser = mockUsers.find(u => u.email === email && (u as any).password === password);
+    // Check if input is email or phone number
+    const isEmail = emailOrPhone.includes('@');
+    
+    let foundUser;
+    if (isEmail) {
+      // Login with email - requires exact match
+      foundUser = mockUsers.find(u => u.email === emailOrPhone && (u as any).password === password);
+    } else {
+      // Login with phone number - any phone number with any password works for demo
+      // Find user based on selected role, or default to first user if no role specified
+      if (role) {
+        foundUser = mockUsers.find(u => u.role === role);
+      } else {
+        foundUser = mockUsers[0]; // Default to first user (Patient)
+      }
+    }
+    
+    // If role is specified and we found a user, ensure role matches
+    if (role && foundUser && foundUser.role !== role) {
+      foundUser = mockUsers.find(u => u.role === role);
+    }
     
     if (foundUser) {
       const userWithoutPassword = { ...foundUser };
@@ -137,23 +157,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         bio: (userData as any).bio || '',
         verified: false
       } as Doctor;
-    } else {
+    } else if (userData.role === 'admin') {
       newUser = {
         id: Date.now().toString(),
         email: userData.email!,
         name: userData.name!,
         phone: userData.phone!,
-        role: userData.role || 'patient',
-        createdAt: new Date().toISOString()
-      };
-
-      if (userData.role === 'patient') {
-        (newUser as Patient).dateOfBirth = (userData as any).dateOfBirth || '';
-        (newUser as Patient).address = (userData as any).address || '';
-        (newUser as Patient).emergencyContact = (userData as any).emergencyContact || '';
-        (newUser as Patient).medicalHistory = [];
-        (newUser as Patient).currentTherapies = [];
-      }
+        role: 'admin',
+        createdAt: new Date().toISOString(),
+        permissions: ['manage_users', 'manage_bookings', 'view_reports'],
+        managedCenters: [],
+        department: 'Operations'
+      } as Admin;
+    } else {
+      // Default to doctor if no role specified
+      newUser = {
+        id: Date.now().toString(),
+        email: userData.email!,
+        name: userData.name!,
+        phone: userData.phone!,
+        role: 'doctor',
+        createdAt: new Date().toISOString(),
+        specialization: ['General Ayurveda'],
+        experience: 0,
+        qualification: '',
+        registrationNumber: '',
+        licenseNumber: '',
+        availability: [],
+        patients: [],
+        consultationFee: 1000,
+        languages: ['English'],
+        bio: '',
+        verified: false
+      } as Doctor;
     }
 
     setUser(newUser);
