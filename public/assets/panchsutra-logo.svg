@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PanchSutra logo">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#2aa4f4"/>
+      <stop offset="100%" stop-color="#0bb78a"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b63d1"/>
+      <stop offset="100%" stop-color="#2aa4f4"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" rx="56" fill="#ffffff"/>
+  <g transform="translate(48,48) scale(0.83)">
+    <!-- outer rounded shield -->
+    <path d="M208 8 C264 8 304 48 304 104 C304 160 256 200 208 248 C160 200 112 160 112 104 C112 48 152 8 208 8 Z" fill="url(#g1)" opacity="0.95" stroke="#0b63d1" stroke-width="3"/>
+    <!-- inner white circle -->
+    <circle cx="208" cy="112" r="72" fill="#ffffff" />
+    <!-- three leaves -->
+    <path d="M208 52 C196 76 176 86 176 104 C176 132 208 132 208 132 C208 132 240 132 240 104 C240 86 220 76 208 52 Z" fill="url(#g2)" />
+    <path d="M184 120 C172 140 160 152 160 168 C160 190 184 190 184 190 C184 190 208 190 208 168 C208 152 196 140 184 120 Z" fill="#0bb78a" />
+    <path d="M232 120 C244 140 256 152 256 168 C256 190 232 190 232 190 C232 190 208 190 208 168 C208 152 220 140 232 120 Z" fill="#0b8b6e" />
+    <!-- stem / base flourish -->
+    <path d="M168 200 C192 220 224 230 248 200" stroke="#0b63d1" stroke-width="6" stroke-linecap="round" fill="none" />
+  </g>
+  <!-- brand wordmark under the icon (kept minimal so header text still displays) -->
+  <text x="50%" y="480" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="36" text-anchor="middle" fill="#0b63d1">PanchSutra</text>
+</svg>
